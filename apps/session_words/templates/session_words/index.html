@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static "session_words/style.css" %}">
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class = "side">
+        <form action='/session_words/add_word' method='post'>
+          {% csrf_token %}
+          <h1>Add a new word:</h1>
+          <input type='text' name='word'>
+          <p>Choose color</p>
+          <label for="red">Red</label>
+          <input type="radio" name="color" value="red">
+          <label for="green">Green</label>
+          <input type="radio" name="color" value="green">
+          <label for="blue">Blue</label>
+          <input type="radio" name="color" value="blue">
+
+          <input type="checkbox" name="font">
+          <label for="font">show in BIG fonts!</label>
+
+          <input type='submit' value='Add to Session' >
+        </form>
+        {% if messages %}
+            {% for message in messages %}
+              <p{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+      </div>
+      <div class = "side">
+          <form action='/session_words/clear' method='post'>
+            {% csrf_token %}
+            <input type='submit' value='Clear Session' >
+          </form>
+          {% if request.session.list %}
+            {% for item in request.session.list %}
+              <div class = "list_word">
+                <p class = "{{item.color}} {{item.font}}"> {{item.word}}</p> 
+                <p>- added on {{item.time}} </p>
+              </div>
+            {% endfor %}
+          {% endif %}
+      </div>
+    </div>
+  </body>
+</html>
